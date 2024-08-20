@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
     const polygonId = '66c355ac641959eff0d662f8';
-    const clouds = '0';
 
-    document.getElementById('fetch-data').addEventListener('click', function() {
+        document.getElementById('fetch-data').addEventListener('click', function() {
         const startDateInput = document.getElementById('start-date').value;
         const endDateInput = document.getElementById('end-date').value;
 
@@ -11,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const startDate = new Date(startDateInput).getTime() / 1000; // Convertir a timestamp UNIX
             const endDate = new Date(endDateInput).getTime() / 1000; // Convertir a timestamp UNIX
 
-            const url = `https://api.agromonitoring.com/agro/1.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}&clouds=${clouds}`;
+            const url = `https://api.agromonitoring.com/agro/1.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}`;
 
             fetch(url)
                 .then(response => response.json())
@@ -25,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         data.forEach(record => {
                             const ndviValue = record.data.mean.toFixed(2); // Redondear a dos decimales
+                            const cloudiness = record.clouds ? record.clouds.toFixed(2) : 'N/A'; // Extraer nubosidad, si está disponible
                             const date = new Date(record.dt * 1000); // Convierte la fecha a formato legible
                             const formattedDate = date.toLocaleDateString('es-ES', {
                                 year: 'numeric',
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             // Crear y agregar un nuevo elemento para cada registro
                             const recordElement = document.createElement('p');
-                            recordElement.textContent = `Valor de NDVI: ${ndviValue} (Fecha: ${formattedDate})`;
+                            recordElement.textContent = `Valor de NDVI: ${ndviValue} (Nubosidad: ${cloudiness}%) (Fecha: ${formattedDate})`;
                             ndviContainer.appendChild(recordElement);
                         });
                     } else {
