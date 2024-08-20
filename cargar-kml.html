@@ -13,7 +13,7 @@ document.getElementById('uploadButton').addEventListener('click', () => {
         reader.onload = function(event) {
             // Convertir el contenido del archivo a un objeto JavaScript
             const geojsonData = JSON.parse(event.target.result);
-            const apiKey = 'TU_API_KEY';  // Reemplazar con tu clave API
+            const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
             const url = `https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`;
             
             // Hacer la solicitud POST a la API de Agromonitoring
