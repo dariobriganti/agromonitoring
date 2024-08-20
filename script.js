@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 month: 'long',
                                 day: 'numeric'
                             });
-                            const cloudiness = (record.cl / 100).toFixed(2); // Convertir de 0-100 a 0-1 y redondear a dos decimales
+                            const cloudiness = record.cl.toFixed(2); 
 
                             // Crear y agregar un nuevo elemento para cada registro
                             const recordElement = document.createElement('p');
