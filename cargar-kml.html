@@ -18,7 +18,8 @@ document.getElementById('uploadButton').addEventListener('click', () => {
             // Obtener el valor de "Campo" desde el JSON
             const campoValue = geojsonData.Campo || 'Campo';  // Cambia "Campo" al nombre real de la clave dentro de tu JSON
 
-            const polygonName = `${fileName} - ${campoValue}`;  // Crear el nombre del polígono con "Nombre de archivo - Campo"
+            //const polygonName = `${fileName} - ${campoValue}`;  // Crear el nombre del polígono con "Nombre de archivo - Campo"
+            const polygonName = `${fileName}`;  // Crear el nombre del polígono con "Nombre de archivo - Campo"
 
             const polygonId = '66c355ac641959eff0d662f8';
             const url = `https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`;
