@@ -31,10 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 month: 'long',
                                 day: 'numeric'
                             });
+                            const cloudiness = record.cl;
 
                             // Crear y agregar un nuevo elemento para cada registro
                             const recordElement = document.createElement('p');
-                            recordElement.textContent = `Valor de NDVI: ${ndviValue} (Fecha: ${formattedDate})`;
+                            recordElement.textContent = `Valor de NDVI: ${ndviValue} (Fecha: ${formattedDate}, nubosidad: $(cloudiness))`;
                             ndviContainer.appendChild(recordElement);
                         });
                     } else {
