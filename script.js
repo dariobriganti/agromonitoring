@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 month: 'long',
                                 day: 'numeric'
                             });
-                            const cloudiness = record.cl.toFixed(2); 
+                            const cloudiness = record.cl.toFixed(1); 
 
                             // Crear y agregar un nuevo elemento para cada registro
                             const recordElement = document.createElement('p');
