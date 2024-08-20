@@ -1,55 +1,102 @@
-document.getElementById('uploadButton').addEventListener('click', () => {
-    const fileInput = document.getElementById('jsonFileInput');
-    const file = fileInput.files[0];  // Obtener el archivo seleccionado
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Polígono</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #polygonIdDisplay {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Crear Polígono en Agromonitoring</h1>
+    
+    <!-- Input para cargar el archivo JSON -->
+    <input type="file" id="jsonFileInput" accept=".json">
+    <button id="uploadButton">Cargar Polígono</button>
+    
+    <!-- Lugar donde se mostrará el ID del polígono creado -->
+    <p id="polygonIdDisplay"></p>
 
-    if (file) {
-        const fileName = file.name.replace('.json', '');  // Obtener el nombre del archivo sin la extensión
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', () => {
+            const fileInput = document.getElementById('jsonFileInput');
+            const file = fileInput.files[0];  // Obtener el archivo seleccionado
+            const polygonIdDisplay = document.getElementById('polygonIdDisplay');  // Elemento donde se mostrará el ID
 
-        const reader = new FileReader();  // Crear un FileReader
-        reader.onload = function(event) {
-            try {
-                const geojsonData = JSON.parse(event.target.result);  // Intentar parsear el JSON
+            if (file) {
+                const fileName = file.name.replace('.json', '');  // Obtener el nombre del archivo sin la extensión
 
-                // Asegurarse de que "Campo" se encuentra en el primer feature del JSON
-                const campoValue = geojsonData.features[0].properties.Campo;
-                
-                if (!campoValue) {
-                    throw new Error('"Campo" no encontrado en el JSON');
-                }
+                const reader = new FileReader();  // Crear un FileReader
+                reader.onload = function(event) {
+                    try {
+                        const geojsonData = JSON.parse(event.target.result);  // Intentar parsear el JSON
 
-                const polygonName = `${fileName} - ${campoValue}`;  // Crear el nombre del polígono
+                        // Asegurarse de que "Campo" se encuentra en el primer feature del JSON
+                        const campoValue = geojsonData.features[0].properties.Campo;
+                        
+                        if (!campoValue) {
+                            throw new Error('"Campo" no encontrado en el JSON');
+                        }
 
-                const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63'; 
-                const url = `https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`;
-                
-                // Hacer la solicitud POST a la API de Agromonitoring
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "geo_json": geojsonData,
-                        "name": polygonName  // Usar el nombre del polígono generado
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.id) {
-                        console.log('Polígono creado con éxito. ID del polígono:', data.id);
-                    } else {
-                        console.error('No se encontró el ID del polígono en la respuesta:', data);
+                        const polygonName = `${fileName} - ${campoValue}`;  // Crear el nombre del polígono
+
+                        const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
+                        const url = `https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`;
+                        
+                        // Hacer la solicitud POST a la API de Agromonitoring
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                "geo_json": geojsonData,
+                                "name": polygonName  // Usar el nombre del polígono generado
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.id) {
+                                polygonIdDisplay.textContent = `ID del polígono creado: ${data.id}`;
+                            } else {
+                                polygonIdDisplay.textContent = 'Error: No se encontró el ID del polígono en la respuesta.';
+                            }
+                        })
+                        .catch(error => {
+                            polygonIdDisplay.textContent = `Error al crear el polígono: ${error.message}`;
+                        });
+                    } catch (e) {
+                        polygonIdDisplay.textContent = `Error al procesar el JSON: ${e.message}`;
                     }
-                })
-                .catch(error => {
-                    console.error('Error al crear el polígono:', error);
-                });
-            } catch (e) {
-                console.error('Error al procesar el JSON:', e.message);
+                };
+                reader.readAsText(file);  // Leer el contenido del archivo como texto
+            } else {
+                polygonIdDisplay.textContent = 'No se ha seleccionado ningún archivo.';
             }
-        };
-        reader.readAsText(file);  // Leer el contenido del archivo como texto
-    } else {
-        console.error('No se ha seleccionado ningún archivo.');
-    }
-});
+        });
+    </script>
+</body>
+</html>
+
