@@ -1,0 +1,43 @@
+<!-- HTML: Input para cargar el archivo JSON -->
+<input type="file" id="jsonFileInput" accept=".json">
+<button id="uploadButton">Cargar Polígono</button>
+
+<!-- JavaScript -->
+<script>
+document.getElementById('uploadButton').addEventListener('click', () => {
+    const fileInput = document.getElementById('jsonFileInput');
+    const file = fileInput.files[0];  // Obtener el archivo seleccionado
+
+    if (file) {
+        const reader = new FileReader();  // Crear un FileReader
+        reader.onload = function(event) {
+            // Convertir el contenido del archivo a un objeto JavaScript
+            const geojsonData = JSON.parse(event.target.result);
+            const apiKey = 'TU_API_KEY';  // Reemplazar con tu clave API
+            const url = `https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`;
+            
+            // Hacer la solicitud POST a la API de Agromonitoring
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "geo_json": geojsonData,
+                    "name": "Nombre del Polígono"  // Cambia esto según sea necesario
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Polígono creado con éxito:', data);
+            })
+            .catch(error => {
+                console.error('Error al crear el polígono:', error);
+            });
+        };
+        reader.readAsText(file);  // Leer el contenido del archivo como texto
+    } else {
+        console.error('No se ha seleccionado ningún archivo.');
+    }
+});
+</script>
