@@ -1,42 +1,53 @@
-<!-- HTML: Input para cargar el archivo JSON -->
-<input type="file" id="jsonFileInput" accept=".json">
-<button id="uploadButton">Cargar Polígono</button>
+document.addEventListener('DOMContentLoaded', function() {
+    const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
+    const polygonId = '66c355ac641959eff0d662f8';
+    const cloudsMax = '20';
 
-<!-- JavaScript -->
-<script>
-document.getElementById('uploadButton').addEventListener('click', () => {
-    const fileInput = document.getElementById('jsonFileInput');
-    const file = fileInput.files[0];  // Obtener el archivo seleccionado
+    document.getElementById('fetch-data').addEventListener('click', function() {
+        const startDateInput = document.getElementById('start-date').value;
+        const endDateInput = document.getElementById('end-date').value;
 
-    if (file) {
-        const fileName = file.name.replace('.json', '');  // Obtener el nombre del archivo sin la extensión
+        if (startDateInput && endDateInput) {
+            const startDate = new Date(startDateInput).getTime() / 1000; // Convertir a timestamp UNIX
+            const endDate = new Date(endDateInput).getTime() / 1000; // Convertir a timestamp UNIX
 
-        const reader = new FileReader();  // Crear un FileReader
-        reader.onload = function(event) {
-            const geojsonData = JSON.parse(event.target.result);  // Convertir el contenido del archivo a un objeto JavaScript
-            
-            // Obtener el valor de "Campo" desde el JSON
-            const campoValue = geojsonData.Campo || 'Campo';  // Cambia "Campo" al nombre real de la clave dentro de tu JSON
+            const url = `https://api.agromonitoring.com/agro/1.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}&clouds_max=${cloudsMax}`;
 
-            const polygonName = `${fileName} - ${campoValue}`;  // Crear el nombre del polígono con "Nombre de archivo - Campo"
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const ndviContainer = document.getElementById('ndvi-value');
+                    ndviContainer.innerHTML = ''; // Limpiar el contenido previo
 
-            const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
-            const url = `https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`;
-            
-            // Hacer la solicitud POST a la API de Agromonitoring
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "geo_json": geojsonData,
-                    "name": polygonName  // Usar el nombre del polígono generado
+                    if (data && data.length > 0) {
+                        // Ordenar los datos por fecha (dt)
+                        data.sort((a, b) => a.dt - b.dt);
+
+                        data.forEach(record => {
+                            const ndviValue = record.data.mean.toFixed(2); // Redondear a dos decimales
+                            const date = new Date(record.dt * 1000); // Convierte la fecha a formato legible
+                            const formattedDate = date.toLocaleDateString('es-ES', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            const cloudiness = record.cl.toFixed(1); 
+
+                            // Crear y agregar un nuevo elemento para cada registro
+                            const recordElement = document.createElement('p');
+                            recordElement.textContent = `Valor de NDVI: ${ndviValue} (Fecha: ${formattedDate}, nubosidad: ${cloudiness})`;
+                            ndviContainer.appendChild(recordElement);
+                        });
+                    } else {
+                        ndviContainer.textContent = "No se encontraron datos de NDVI para las fechas seleccionadas.";
+                    }
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Polígono creado con éxito:', data);
-            })
-            .catch(error => {
-                console.error('Error al crear el políg
+                .catch(error => {
+                    document.getElementById('ndvi-value').textContent = "Error al obtener datos de NDVI.";
+                    console.error('Error en la conexión:', error);
+                });
+        } else {
+            document.getElementById('ndvi-value').textContent = "Por favor, selecciona ambas fechas.";
+        }
+    });
+});
