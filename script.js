@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
     const polygonId = '66c355ac641959eff0d662f8';
-    const cloudMax = '20';
+    const cloudsMax = '20';
 
     document.getElementById('fetch-data').addEventListener('click', function() {
         const startDateInput = document.getElementById('start-date').value;
