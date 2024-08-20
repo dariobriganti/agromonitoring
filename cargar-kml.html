@@ -16,8 +16,12 @@ document.getElementById('uploadButton').addEventListener('click', () => {
             try {
                 const geojsonData = JSON.parse(event.target.result);  // Intentar parsear el JSON
 
-                // Obtener el valor de "Campo" desde el JSON
-                const campoValue = geojsonData.features[0].properties.Campo || 'Campo';  // Obtener "Campo" del primer feature
+                // Asegurarse de que "Campo" se encuentra en el primer feature del JSON
+                const campoValue = geojsonData.features[0].properties.Campo;
+                
+                if (!campoValue) {
+                    throw new Error('"Campo" no encontrado en el JSON');
+                }
 
                 const polygonName = `${fileName} - ${campoValue}`;  // Crear el nombre del polígono
 
