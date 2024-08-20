@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             // Crear y agregar un nuevo elemento para cada registro
                             const recordElement = document.createElement('p');
-                            recordElement.textContent = `Valor de NDVI: ${ndviValue} (Fecha: ${formattedDate}, nubosidad: ${cloudiness}%)`;
+                            recordElement.textContent = `Valor de NDVI: ${ndviValue} (Fecha: ${formattedDate}, nubosidad: ${cloudiness} %)`;
                             ndviContainer.appendChild(recordElement);
                         });
                     } else {
