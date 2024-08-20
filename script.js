@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 month: 'long',
                                 day: 'numeric'
                             });
-                           const cloudiness = record.cl ? record.cl.toFixed(1) : 'N/A'; // Redondear nubosidad a un decimal
+                            const cloudiness = (record.cl / 100).toFixed(2); // Convertir de 0-100 a 0-1 y redondear a dos decimales
 
                             // Crear y agregar un nuevo elemento para cada registro
                             const recordElement = document.createElement('p');
