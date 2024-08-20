@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data); // Verifica la estructura de los datos
                     const ndviContainer = document.getElementById('ndvi-value');
                     ndviContainer.innerHTML = ''; // Limpiar el contenido previo
 
