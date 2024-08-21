@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Polígonos desde MultiPolygon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #resultDisplay {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Crear Polígonos en Agromonitoring</h1>
+    
+    <!-- Input para cargar el archivo GeoJSON -->
+    <input type="file" id="geojsonFileInput" accept=".geojson">
+    <button id="uploadButton">Cargar Polígonos</button>
+    
+    <!-- Lugar donde se mostrará el resultado de cada polígono creado -->
+    <div id="resultDisplay"></div>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', () => {
+            const fileInput = document.getElementById('geojsonFileInput');
+            const file = fileInput.files[0];  // Obtener el archivo seleccionado
+            const resultDisplay = document.getElementById('resultDisplay');  // Elemento donde se mostrará el resultado
+            resultDisplay.innerHTML = '';  // Limpiar resultados anteriores
+
+            if (file) {
+                const fileName = file.name.replace('.geojson', '');  // Obtener el nombre del archivo sin la extensión
+
+                const reader = new FileReader();  // Crear un FileReader
+                reader.onload = function(event) {
+                    try {
+                        const geojsonData = JSON.parse(event.target.result);  // Parsear el GeoJSON
+                        
+                        // Iterar sobre cada feature en el GeoJSON
+                        geojsonData.features.forEach((feature, index) => {
+                            const campoValue = feature.properties.Campo || 'Desconocido';
+                            const potreroValue = feature.properties.Potrero || 'Desconocido';
+                            const especieValue = feature.properties.Especie || 'Desconocido';
+
+                            if (feature.geometry.type === "MultiPolygon") {
+                                // Iterar sobre cada polígono dentro del MultiPolygon
+                                feature.geometry.coordinates.forEach((polygonCoords, polygonIndex) => {
+                                    const polygonName = `${fileName} - ${campoValue} - ${potreroValue} - ${especieValue} - Polígono ${polygonIndex + 1}`;  // Nombre del polígono
+
+									const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
+                                    const url = `https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`;
+                                    
+                                    // Crear un polígono a partir de los coordenadas del MultiPolygon
+                                    const polygonFeature = {
+                                        type: "Feature",
+                                        geometry: {
+                                            type: "Polygon",
+                                            coordinates: polygonCoords
+                                        },
+                                        properties: feature.properties
+                                    };
+
+                                    // Hacer la solicitud POST a la API de Agromonitoring
+                                    fetch(url, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            "geo_json": { "type": "FeatureCollection", "features": [polygonFeature] },  // Incluir solo el polígono actual
+                                            "name": polygonName  // Usar el nombre del polígono generado
+                                        })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.id) {
+                                            resultDisplay.innerHTML += `<p>Polígono ${index + 1}.${polygonIndex + 1} creado con éxito. ID: ${data.id}</p>`;
+                                        } else {
+                                            resultDisplay.innerHTML += `<p>Error al crear el polígono ${index + 1}.${polygonIndex + 1}. Respuesta: ${JSON.stringify(data)}</p>`;
+                                        }
+                                    })
+                                    .catch(error => {
+                                        resultDisplay.innerHTML += `<p>Error al crear el polígono ${index + 1}.${polygonIndex + 1}: ${error.message}</p>`;
+                                    });
+                                });
+                            } else if (feature.geometry.type === "Polygon") {
+                                // Procesar si es un polígono simple
+                                const polygonName = `${fileName} - ${campoValue} - ${potreroValue} - ${especieValue}`;
+
+								const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
+                                const url = `https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`;
+                                
+                                fetch(url, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        "geo_json": { "type": "FeatureCollection", "features": [feature] },
+                                        "name": polygonName
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.id) {
+                                        resultDisplay.innerHTML += `<p>Polígono ${index + 1} creado con éxito. ID: ${data.id}</p>`;
+                                    } else {
+                                        resultDisplay.innerHTML += `<p>Error al crear el polígono ${index + 1}. Respuesta: ${JSON.stringify(data)}</p>`;
+                                    }
+                                })
+                                .catch(error => {
+                                    resultDisplay.innerHTML += `<p>Error al crear el polígono ${index + 1}: ${error.message}</p>`;
+                                });
+                            } else {
+                                resultDisplay.innerHTML += `<p>La "feature" ${index + 1} no es un Polígono ni MultiPolygon, se omitió.</p>`;
+                            }
+                        });
+                    } catch (e) {
+                        resultDisplay.textContent = `Error al procesar el GeoJSON: ${e.message}`;
+                    }
+                };
+                reader.readAsText(file);  // Leer el contenido del archivo como texto
+            } else {
+                resultDisplay.textContent = 'No se ha seleccionado ningún archivo.';
+            }
+        });
+    </script>
+</body>
+</html>
