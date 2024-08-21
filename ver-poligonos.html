@@ -69,8 +69,6 @@
         <p><strong>Área:</strong> ${polygon.area} ha</p>
         <p><strong>Fecha de creación:</strong> ${new Date(polygon.created_at * 1000).toLocaleDateString()}</p>
         <p><strong>Centro:</strong> ${polygon.center ? polygon.center.join(', ') : 'No disponible'}</p>
-        <p><strong>Activo:</strong> ${polygon.active ? 'Sí' : 'No'}</p>
-        <p><strong>Tipo de geometría:</strong> ${polygon.geo_json.geometry.type}</p>
         <p><strong>Coordenadas:</strong> ${polygon.geo_json.geometry.coordinates}</p>
         ${culturesHtml} <!-- Muestra la información de "cultures" -->
         ${propertiesHtml} <!-- Muestra las propiedades adicionales -->
