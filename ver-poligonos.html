@@ -21,7 +21,7 @@
     <div id="polygons"></div>
 
     <script>
-		const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
+	const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
 
         async function fetchPolygons() {
             try {
@@ -30,23 +30,54 @@
 
                 const container = document.getElementById('polygons');
 
-                polygons.forEach(polygon => {
-                    const polygonElement = document.createElement('div');
-                    polygonElement.className = 'polygon';
-                
-                    polygonElement.innerHTML = `
-                        <h3>${polygon.name}</h3>
-                        <p><strong>ID:</strong> ${polygon.id}</p>
-                        <p><strong>Área:</strong> ${polygon.area} ha</p>
-                        <p><strong>Fecha de creación:</strong> ${new Date(polygon.created_at * 1000).toLocaleDateString()}</p>
-                        <p><strong>Centro:</strong> ${polygon.center ? polygon.center.join(', ') : 'No disponible'}</p>
-                        <p><strong>Activo:</strong> ${polygon.active ? 'Sí' : 'No'}</p>
-                        <p><strong>Tipo de geometría:</strong> ${polygon.geo_json.geometry.type}</p>
-                        <p><strong>Coordenadas:</strong> ${polygon.geo_json.geometry.coordinates}</p>
-                    `;
-                
-                    container.appendChild(polygonElement);
-                });
+	polygons.forEach(polygon => {
+	    const polygonElement = document.createElement('div');
+	    polygonElement.className = 'polygon';
+	
+	    // Verifica si el campo "cultures" existe
+	    let culturesHtml = '<p><strong>Cultivos:</strong> No disponible</p>';
+	    if (polygon.cultures && polygon.cultures.length > 0) {
+	        culturesHtml = '<ul>';
+	        polygon.cultures.forEach(culture => {
+	            culturesHtml += `
+	                <li>
+	                    <p><strong>Nombre del cultivo:</strong> ${culture.name}</p>
+	                    <p><strong>Tipo:</strong> ${culture.type}</p>
+	                    <p><strong>Fecha de plantación:</strong> ${culture.planting_date ? new Date(culture.planting_date * 1000).toLocaleDateString() : 'No disponible'}</p>
+	                    <p><strong>Fecha de cosecha estimada:</strong> ${culture.harvest_date ? new Date(culture.harvest_date * 1000).toLocaleDateString() : 'No disponible'}</p>
+	                </li>
+	            `;
+	        });
+        culturesHtml += '</ul>';
+    }
+
+    // Verifica si el campo "properties" existe
+    let propertiesHtml = '<p><strong>Propiedades adicionales:</strong> No disponible</p>';
+    if (polygon.geo_json.properties && Object.keys(polygon.geo_json.properties).length > 0) {
+        propertiesHtml = '<ul>';
+        for (const key in polygon.geo_json.properties) {
+            propertiesHtml += `
+                <li><strong>${key}:</strong> ${polygon.geo_json.properties[key]}</li>
+            `;
+        }
+        propertiesHtml += '</ul>';
+    }
+
+    polygonElement.innerHTML = `
+        <h3>${polygon.name}</h3>
+        <p><strong>ID:</strong> ${polygon.id}</p>
+        <p><strong>Área:</strong> ${polygon.area} ha</p>
+        <p><strong>Fecha de creación:</strong> ${new Date(polygon.created_at * 1000).toLocaleDateString()}</p>
+        <p><strong>Centro:</strong> ${polygon.center ? polygon.center.join(', ') : 'No disponible'}</p>
+        <p><strong>Activo:</strong> ${polygon.active ? 'Sí' : 'No'}</p>
+        <p><strong>Tipo de geometría:</strong> ${polygon.geo_json.geometry.type}</p>
+        <p><strong>Coordenadas:</strong> ${polygon.geo_json.geometry.coordinates}</p>
+        ${culturesHtml} <!-- Muestra la información de "cultures" -->
+        ${propertiesHtml} <!-- Muestra las propiedades adicionales -->
+    `;
+
+    container.appendChild(polygonElement);
+});
             } catch (error) {
                 console.error('Error al obtener los polígonos:', error);
             }
