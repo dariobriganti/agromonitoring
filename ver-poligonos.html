@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polígonos de Agromonitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .polygon {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Polígonos de Agromonitoring</h1>
+    <div id="polygons"></div>
+
+    <script>
+        const apiKey = 'TU_API_KEY'; // Reemplaza con tu clave de API de Agromonitoring
+
+        async function fetchPolygons() {
+            try {
+                const response = await fetch(`https://api.agromonitoring.com/agro/1.0/polygons?appid=${apiKey}`);
+                const polygons = await response.json();
+
+                const container = document.getElementById('polygons');
+
+                polygons.forEach(polygon => {
+                    const polygonElement = document.createElement('div');
+                    polygonElement.className = 'polygon';
+                
+                    polygonElement.innerHTML = `
+                        <h3>${polygon.name}</h3>
+                        <p><strong>ID:</strong> ${polygon.id}</p>
+                        <p><strong>Área:</strong> ${polygon.area} ha</p>
+                        <p><strong>Fecha de creación:</strong> ${new Date(polygon.created_at * 1000).toLocaleDateString()}</p>
+                        <p><strong>Centro:</strong> ${polygon.center ? polygon.center.join(', ') : 'No disponible'}</p>
+                        <p><strong>Activo:</strong> ${polygon.active ? 'Sí' : 'No'}</p>
+                        <p><strong>Tipo de geometría:</strong> ${polygon.geo_json.geometry.type}</p>
+                        <p><strong>Coordenadas:</strong> ${polygon.geo_json.geometry.coordinates}</p>
+                    `;
+                
+                    container.appendChild(polygonElement);
+                });
+            } catch (error) {
+                console.error('Error al obtener los polígonos:', error);
+            }
+        }
+
+        fetchPolygons();
+    </script>
+</body>
+</html>
