@@ -24,7 +24,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         data.forEach(record => {
                             const ndviValue = record.data.mean.toFixed(2); // Redondear a dos decimales
-                            const cloudiness = (record.cl).toFixed(1); // Convertir de 0-100 a 0-1 y redondear a dos decimales
+                            //const cloudiness = (record.cl).toFixed(1); // Convertir de 0-100 a 0-1 y redondear a dos decimales
+                            const cloudiness = record.cl; // Convertir de 0-100 a 0-1 y redondear a dos decimales
                             const date = new Date(record.dt * 1000); // Convierte la fecha a formato legible
                             const formattedDate = date.toLocaleDateString('es-ES', {
                                 year: 'numeric',
