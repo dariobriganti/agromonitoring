@@ -2,8 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
 
     document.getElementById('fetch-data').addEventListener('click', function() {
-        const startDateInput = document.getElementById('start-date').value;
-        const endDateInput = document.getElementById('end-date').value;
+        const sumarfecha = 24 * 60 * 60; // 24 horas en segundos
+        const startDateInput = document.getElementById('start-date').value + sumarfecha;
+        const endDateInput = document.getElementById('end-date').value + sumarfecha;
         const polygonId = document.getElementById('polygon-id').value; // Obtener el ID del polígono del campo de entrada
         const maxClouds = document.getElementById('max-cl').value;
 
