@@ -2,17 +2,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
 
     document.getElementById('fetch-data').addEventListener('click', function() {
-        const sumarfecha = 24 * 60 * 60; // 24 horas en segundos
-        const startDateInput = document.getElementById('start-date').value + sumarfecha;
-        const endDateInput = document.getElementById('end-date').value + sumarfecha;
+        const startDateInput = document.getElementById('start-date').value;
+        const endDateInput = document.getElementById('end-date').value;
         const polygonId = document.getElementById('polygon-id').value; // Obtener el ID del polígono del campo de entrada
         const maxClouds = document.getElementById('max-cl').value;
 
-        if (startDateInput && endDateInput && polygonId) {
-            const timeZoneOffset = 3 * 60 * 60; // 3 horas en segundos
-            
-            const startDate = new Date(startDateInput).getTime() / 1000 - timeZoneOffset; // Convertir a timestamp UNIX y ajustar a UTC-3
-            const endDate = new Date(endDateInput).getTime() / 1000 - timeZoneOffset; // Convertir a timestamp UNIX y ajustar a UTC-3
+        if (startDateInput && endDateInput && polygonId) {            
+            const startDate = new Date(startDateInput).getTime() / 1000; // Convertir a timestamp UNIX 
+            const endDate = new Date(endDateInput).getTime() / 1000; // Convertir a timestamp UNIX 
 
             const url = `https://api.agromonitoring.com/agro/1.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}&clouds_max=${maxClouds}`;
 
