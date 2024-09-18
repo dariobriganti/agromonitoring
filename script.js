@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
 
     document.getElementById('fetch-data').addEventListener('click', function() {
-        #const startDateInput = document.getElementById('start-date').value;
-        #const endDateInput = document.getElementById('end-date').value;
+        /*const startDateInput = document.getElementById('start-date').value;*/
+        /*const endDateInput = document.getElementById('end-date').value;*/
 
 
         const startDate = Date.UTC(
