@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const ndviValue = record.data.mean.toFixed(2); // Redondear a dos decimales
                             //const cloudiness = (record.cl).toFixed(1); // Convertir de 0-100 a 0-1 y redondear a dos decimales
                             const cloudiness = record.clouds.toFixed(1); // Redondear a un decimal sin cambiar el rango.
-                            const date = new Date(record.dt * 1000 - timeZoneOffset); // Convierte la fecha a formato legible
+                            const date = new Date(record.dt * 1000); // Convierte la fecha a formato legible
                             const formattedDate = date.toLocaleDateString('es-ES', {
                                 year: 'numeric',
                                 month: 'long',
