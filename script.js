@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const polygonId = document.getElementById('polygon-id').value; // Obtener el ID del polígono del campo de entrada
         const maxClouds = document.getElementById('max-cl').value;
 
-        if (startDateInput && endDateInput && polygonId) {            
-            const startDate = new Date(startDateInput).getTime() / 1000; // Convertir a timestamp UNIX 
-            const endDate = new Date(endDateInput).getTime() / 1000; // Convertir a timestamp UNIX 
+        if (startDateInput && endDateInput && polygonId) {
+            const startDate = new Date(startDateInput).getTime() / 1000; // Convertir a timestamp UNIX
+            const endDate = new Date(endDateInput).getTime() / 1000; // Convertir a timestamp UNIX
 
             const url = `https://api.agromonitoring.com/agro/1.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}&clouds_max=${maxClouds}`;
 
@@ -24,8 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         data.forEach(record => {
                             const ndviValue = record.data.mean.toFixed(2); // Redondear a dos decimales
-                            //const cloudiness = (record.cl).toFixed(1); // Convertir de 0-100 a 0-1 y redondear a dos decimales
-                            const cloudiness = record.cl.toFixed(1); // Redondear a un decimal sin cambiar el rango.
+                            const cloudiness = (record.cl).toFixed(1); // Convertir de 0-100 a 0-1 y redondear a dos decimales
                             const date = new Date(record.dt * 1000); // Convierte la fecha a formato legible
                             const formattedDate = date.toLocaleDateString('es-ES', {
                                 year: 'numeric',
