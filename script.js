@@ -49,7 +49,7 @@ const endDate = Date.UTC(
                                 day: 'numeric'
                             });
 
-                            console.log(record.cl);
+                            console.log(cloudiness);
 
 
                             const recordElement = document.createElement('p');
