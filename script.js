@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             const recordElement = document.createElement('p');
                             recordElement.textContent = `Valor de NDVI: ${ndviValue} (Nubosidad: ${cloudiness}) (Fecha: ${formattedDate})`;
-                            ndviContainer.appendChild(url);
                             ndviContainer.appendChild(recordElement);
                         });
                     } else {
