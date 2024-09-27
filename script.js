@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     const apiKey = 'be9b9f7295d5f005696dec5b3f7d1d63';
     const polygonId = '66c355ac641959eff0d662f8';
-    const cloudsMax = '20';
 
     document.getElementById('fetch-data').addEventListener('click', function() {
         const startDateInput = document.getElementById('start-date').value;
         const endDateInput = document.getElementById('end-date').value;
         const polygonId = document.getElementById('polygon-id').value; // Obtener el ID del polígono del campo de entrada
+        const cloudsMax = document.getElementById('max-cl').value;
 
         if (startDateInput && endDateInput) {
         if (startDateInput && endDateInput && polygonId) {
