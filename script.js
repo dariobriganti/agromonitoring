@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const startDateInput = document.getElementById('start-date').value;
         const endDateInput = document.getElementById('end-date').value;
         const polygonId = document.getElementById('polygon-id').value; // Obtener el ID del polígono del campo de entrada
-        const minClouds = 0; 
         const maxClouds = document.getElementById('max-cl').value;
 
         if (startDateInput && endDateInput && polygonId) {
@@ -35,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             const recordElement = document.createElement('p');
                             recordElement.textContent = `Valor de NDVI: ${ndviValue} (Nubosidad: ${cloudiness}) (Fecha: ${formattedDate})`;
+                            ndviContainer.appendChild(url);
                             ndviContainer.appendChild(recordElement);
                         });
                     } else {
