@@ -5,12 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const startDateInput = document.getElementById('start-date').value;
         const endDateInput = document.getElementById('end-date').value;
         const polygonId = document.getElementById('polygon-id').value; // Obtener el ID del polígono del campo de entrada
+        const minClouds = 0; 
+        const maxClouds = document.getElementById('max-cl').value;
 
         if (startDateInput && endDateInput && polygonId) {
             const startDate = new Date(startDateInput).getTime() / 1000; // Convertir a timestamp UNIX
             const endDate = new Date(endDateInput).getTime() / 1000; // Convertir a timestamp UNIX
 
-            const url = `https://api.agromonitoring.com/agro/1.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}`;
+            const url = `https://api.agromonitoring.com/agro/1.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}&clouds_max=${maxClouds}`;
 
             fetch(url)
                 .then(response => response.json())
