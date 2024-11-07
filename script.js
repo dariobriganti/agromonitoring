@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const endDate = new Date(endDateInput).getTime() / 1000; // Convertir a timestamp UNIX
 
             //const url = `https://api.agromonitoring.com/agro/1.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}&clouds_max=${maxClouds}`;
-            const url = 'https://api.agromonitoring.com/agro/2.0/ndvi/history?start=1717253984&end=1727708384&polygon_id=66c56c34641959553fd6632c&appid=be9b9f7295d5f005696dec5b3f7d1d63';
+            const url = 'https://api.agromonitoring.com/agro/2.0/ndvi/history?start=${startDate}&end=${endDate}&polygon_id=${polygonId}&appid=${apiKey}&clouds_max=${maxClouds}';
             
             fetch(url)
                 .then(response => response.json())
